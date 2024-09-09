@@ -5,6 +5,8 @@ const { Socket } = require("socket.io");
 
 require("dotenv").config();
 
+const AuthRoutes = require('./Routes/authRoutes');
+
 const app = express();
 const port = process.env.PORT || 5002;
 const http = require('http').createServer(app);
@@ -13,9 +15,10 @@ const io = require('socket.io')(http);
 app.use(cors());
 app.use(express.json());
 
+app.use('/api/v1/auth', AuthRoutes);
+
 const db_uri = process.env.DB_URI;
 
-// Remove the deprecated options
 mongoose.connect(db_uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

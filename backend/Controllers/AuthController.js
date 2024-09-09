@@ -1,8 +1,8 @@
-import User from "../Models/User.model";
-import asyncHandler from "express-async-handler";
-import bcrypt from "bcryptjs";
+const User = require("../Models/User.model");
+const asyncHandler = require("express-async-handler");
+const bcrypt = require("bcryptjs");
 
-export const login = asyncHandler(async (req, res) => {
+const login = asyncHandler(async (req, res) => {
     const { emailOrPhone, password } = req.body;
 
     let user;
@@ -30,7 +30,7 @@ export const login = asyncHandler(async (req, res) => {
     });
 });
 
-export const signup = asyncHandler(async (req, res) => {
+const signup = asyncHandler(async (req, res) => {
     const { emailOrPhone, username, password } = req.body;
 
     if (!username || !password) {
@@ -77,3 +77,5 @@ export const signup = asyncHandler(async (req, res) => {
         },
     });
 });
+
+module.exports = {login,signup}
