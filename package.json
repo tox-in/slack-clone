@@ -17,6 +17,7 @@
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
     "mocha": "^10.7.3",
+    "socket.io": "^4.7.5",
     "supertest": "^7.0.0"
   },
   "devDependencies": {
