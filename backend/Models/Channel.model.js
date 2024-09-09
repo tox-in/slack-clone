@@ -9,6 +9,11 @@ const channelSchema = new Schema({
       match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
       index: true
     },
+    channelId: {
+      type: mongoose.Types.UUID,
+      ref: "channelId"
+    }
+    ,
     ownerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
