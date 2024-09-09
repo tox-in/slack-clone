@@ -9,11 +9,13 @@ const userSchema = new Schema(
     email: {
       type: String,
       unique: true,
-      index: true
+      index: true,
+      sparse: true
     },
     phone: {
       type: Number,
       unique: true,
+      sparse: true,
       length: 10
     },
     username: {
@@ -23,6 +25,11 @@ const userSchema = new Schema(
       unique: true,
       match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
       index: true
+    },
+    password: {
+      type: String,
+      required: true,
+      select: false
     },
     channelIDs: [
       {
