@@ -7,6 +7,7 @@ const bodyParser = require("body-parser"); // Import body-parser
 require("dotenv").config();
 
 const AuthRoutes = require('./Routes/authRoutes');
+const OrganizationRoutes = require('./Routes/organizationRoutes');
 
 const app = express();
 const port = process.env.PORT || 5002;
@@ -19,6 +20,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api/v1/auth', AuthRoutes);
+app.use('/api/v1/organization', OrganizationRoutes);
 
 const db_uri = process.env.DB_URI;
 
