@@ -1,5 +1,6 @@
 const User = require("../Models/User.model");
 const asyncHandler = require("express-async-handler");
+const { generateToken } = require("../utils/generateToken")
 const bcrypt = require("bcryptjs");
 
 const login = asyncHandler(async (req, res) => {
@@ -24,10 +25,17 @@ const login = asyncHandler(async (req, res) => {
         throw new Error("Email cyangwa telephone cyangwa password siyo");
     }
 
-    res.status(200).json({
-        success: true,
-        message: "Login successful",
-    });
+    const token = generateToken(user.id);
+
+    const data = {
+        id: user.id,
+        name: user.username,
+        email: user.email,
+        phone: user.phone,
+        token,
+      };
+
+      res.status(201).json({ success: true, data });
 });
 
 const signup = asyncHandler(async (req, res) => {

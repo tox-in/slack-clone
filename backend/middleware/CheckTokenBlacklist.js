@@ -1,4 +1,4 @@
-import TokenBlacklist from '../models/TokenBlacklist.js';
+const TokenBlacklist = require('../models/TokenBlacklist.js');
 
 const checkTokenBlacklist = async (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
