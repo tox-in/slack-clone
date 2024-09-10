@@ -9,19 +9,26 @@ const channelSchema = new Schema({
     match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
     index: true,
   },
-  channelId: {
-    type: mongoose.Types.ObjectId,
-    ref: "channelId"
-  },
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
+  },
+  isPrivate: {
+    type: Boolean,
+    required: true
   },
   messages: [
     {
       message: { type: String, required: true },
       senderId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
     }
+  ],
+  members: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        required: true
+      }
   ]
 }, {
   timestamps: true

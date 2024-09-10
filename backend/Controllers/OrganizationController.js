@@ -1,3 +1,4 @@
+const Channel = require("../models/Channel.model");
 const Organization = require("../Models/Organization.model")
 const { v4: uuidv4 } = require('uuid');
 
@@ -10,6 +11,15 @@ createOrganization = async (req, res) => {
   
     try {
       const organizationId = uuidv4();
+
+      const channelData = [
+        { name: 'random', ownerId: ownerId, isPrivate: false, members: [ownerId] },
+        { name: 'general', ownerId: ownerId, isPrivate: false, members: [ownerId] }
+      ];
+
+      const createdChannels = await Channel.insertMany(channelData);
+
+      const channelIds = createdChannels.map(channel => channel._id);
   
       const newOrganization = new Organization({
         organizationName,
@@ -17,7 +27,9 @@ createOrganization = async (req, res) => {
         ownerId,
         admins: [ownerId],
         members: [ownerId],
+        channels: channelIds
       });
+
   
       await newOrganization.save();
   
