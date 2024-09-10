@@ -3,9 +3,9 @@ const { v4: uuidv4 } = require('uuid');
 
 createOrganization = async (req, res) => {
     const { organizationName } = req.body;
-    const ownerId = req.user?.id;
+    const ownerId = req.user;
 
-    console.log(ownerId);
+    console.log(req.user);
     
   
     try {

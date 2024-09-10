@@ -4,6 +4,6 @@ const { ProtectMiddleware } = require("../middleware/ProtectMiddleware.js");
 
 const router = express.Router();
 
-router.route("/register", ProtectMiddleware).post(createOrganization);
+router.route("/register").post(ProtectMiddleware, createOrganization);
 
 module.exports = router;

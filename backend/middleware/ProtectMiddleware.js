@@ -12,13 +12,14 @@ const ProtectMiddleware = asyncHandler(async (req, res, next) => {
     if (!token) {
         res.status(401);
         throw new Error('Provide the authorization token first');
+        
     }
 
     try {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        const id = decodedToken.id;
-
-        const user = await User.findById(id);
+        const userId = decodedToken.id;
+        
+        const user = await User.findById(userId).select('-password');
 
         if (!user) {
             res.status(404);
@@ -36,8 +37,9 @@ const ProtectMiddleware = asyncHandler(async (req, res, next) => {
 
 const AuthMiddleware = (...roles) =>
     asyncHandler(async (req, res, next) => {
-        const role = req.user.role;
-        if (!roles.includes(role)) {
+        const userRole = req.user.role;
+
+        if (!roles.includes(userRole)) {
             res.status(403);
             throw new Error('Not authorized to access this route');
         }
@@ -45,4 +47,4 @@ const AuthMiddleware = (...roles) =>
         next();
     });
 
-    module.exports = {ProtectMiddleware, AuthMiddleware}
+module.exports = { ProtectMiddleware, AuthMiddleware };
