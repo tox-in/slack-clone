@@ -25,7 +25,7 @@ const OrganizationSchema = new Schema({
     members: [
         {
         type: mongoose.Types.ObjectId,
-        ref: "User",
+        ref: "OrganizationMembership",
         required: true
         }
     ],

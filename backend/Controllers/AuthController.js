@@ -88,4 +88,8 @@ const signup = asyncHandler(async (req, res) => {
     });
 });
 
+signupInOrganization = asyncHandler( async( req, res) => {
+    const { organization, name, displayName, password, emailOrPhone, organizationId } = req.body;
+})
+
 module.exports = {login,signup}
