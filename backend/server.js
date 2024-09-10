@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const { Socket } = require("socket.io");
+const bodyParser = require("body-parser"); // Import body-parser
 
 require("dotenv").config();
 
@@ -13,7 +14,9 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
 app.use(cors());
-app.use(express.json());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api/v1/auth', AuthRoutes);
 

@@ -32,6 +32,8 @@ const login = asyncHandler(async (req, res) => {
 
 const signup = asyncHandler(async (req, res) => {
     const { emailOrPhone, username, password } = req.body;
+    console.log(req.body);
+    
 
     if (!username || !password) {
         res.status(400);
