@@ -31,7 +31,7 @@ const OrganizationSchema = new Schema({
     ],
     channels: [
         {
-            type: mongoose.Types.UUID,
+            type: mongoose.Types.ObjectId,
             ref: "Channel"
         }
     ],

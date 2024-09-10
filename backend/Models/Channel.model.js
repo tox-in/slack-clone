@@ -2,26 +2,31 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const channelSchema = new Schema({
-    name: {
-      type: String,
-      lowercase: true,
-      required: [true, "can't be blank"],
-      match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
-      index: true
-    },
-    channelId: {
-      type: mongoose.Types.UUID,
-      ref: "channelId"
-    }
-    ,
-    ownerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
-    },
+  name: {
+    type: String,
+    lowercase: true,
+    required: [true, "can't be blank"],
+    match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
+    index: true,
   },
-  {
-    timestamps: true
-  });
+  channelId: {
+    type: mongoose.Types.ObjectId,
+    ref: "channelId"
+  },
+  ownerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  },
+  messages: [
+    {
+      message: { type: String, required: true },
+      senderId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    }
+  ]
+}, {
+  timestamps: true
+});
 
-const Channel = mongoose.model("Channel", channelSchema);
+const Channel = mongoose.models.Channel || mongoose.model("Channel", channelSchema);
+
 module.exports = Channel;
