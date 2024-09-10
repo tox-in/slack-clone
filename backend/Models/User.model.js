@@ -41,7 +41,8 @@ const userSchema = new Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
-      }]
+      }],
+      organizations: [{ type: Schema.Types.ObjectId, ref: 'OrganizationMembership' }],
   },
   {
     timestamps: true
