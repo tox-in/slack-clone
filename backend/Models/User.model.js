@@ -16,7 +16,8 @@ const userSchema = new Schema(
       type: Number,
       unique: true,
       sparse: true,
-      length: 10
+      max: 12,
+      min: 10,
     },
     username: {
       type: String,
