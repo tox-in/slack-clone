@@ -70,7 +70,7 @@ const signup = asyncHandler(async (req, res) => {
     const newUser = new User({
         email: isEmail ? emailOrPhone : undefined,
         phone: isEmail ? undefined : emailOrPhone,
-        username,
+        globalProfile: { username },
         password: hashedPassword,
     });
 
@@ -81,7 +81,7 @@ const signup = asyncHandler(async (req, res) => {
         message: "Umukoresha mushya yashyizweho.",
         user: {
             id: newUser._id,
-            username: newUser.username,
+            username: newUser.globalProfile[username],
             email: newUser.email,
             phone: newUser.phone,
         },
@@ -89,7 +89,40 @@ const signup = asyncHandler(async (req, res) => {
 });
 
 signupInOrganization = asyncHandler( async( req, res) => {
-    const { organization, name, displayName, password, emailOrPhone, organizationId } = req.body;
+    const {username, displayName, password, emailOrPhone, organizationId } = req.body;
+
+    try {
+        let user;
+        let isEmail = /\S+@\S+\.\S+/.test(emailOrPhone);
+    
+        if (isEmail) {
+            user = await User.findOne({ email: emailOrPhone });
+            if (user) {
+                res.status(400);
+                throw new Error("Imeli iramaze gufatwa.");
+            }
+        } else {
+            user = await User.findOne({ phone: emailOrPhone });
+            if (user) {
+                res.status(400);
+                throw new Error("Telephone iramaze gufatwa.");
+            }
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = new User({
+            email: isEmail ? emailOrPhone : undefined,
+            phone: isEmail ? undefined : emailOrPhone,
+            globalProfile: { username },
+            password: hashedPassword,
+        });
+    
+        await newUser.save();
+
+    } catch (err) {
+
+    }
 })
 
 module.exports = {login,signup}

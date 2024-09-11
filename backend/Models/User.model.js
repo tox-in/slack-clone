@@ -19,13 +19,9 @@ const userSchema = new Schema(
       max: 12,
       min: 10,
     },
-    username: {
-      type: String,
-      lowercase: true,
-      required: [true, "can't be blank"],
-      unique: true,
-      match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
-      index: true
+    globalProfile: {
+      username: { type: String, required: true, lowercase: true, required: [true, "can't be blank"], unique: true, match: [/^[a-zA-Z0-9]+$/, 'is invalid'], index: true},
+      profilePicture: { type: String },
     },
     password: {
       type: String,
