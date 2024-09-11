@@ -1,4 +1,5 @@
 const User = require("../Models/User.model");
+const OrganizationMembership = require("../Models/OrganizationMembership.model");
 const asyncHandler = require("express-async-handler");
 const { generateToken } = require("../utils/generateToken")
 const bcrypt = require("bcryptjs");
@@ -119,6 +120,22 @@ signupInOrganization = asyncHandler( async( req, res) => {
         });
     
         await newUser.save();
+
+
+        const existingMembership = await OrganizationMembership.findOne({ userId: user._id, organizationId });
+            if (existingMembership) {
+                return res.status(400).json({ error: 'User already a member of this workspace' });
+            }
+
+        const membership = new OrganizationMembership({
+            userId: user._id,
+            workspaceId,
+            displayName: displayName || username
+        });
+
+        const organization = await Organization.findById(organizationId);
+            workspace.members.push(membership._id);
+            await workspace.save();
 
     } catch (err) {
 
