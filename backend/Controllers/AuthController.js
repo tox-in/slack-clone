@@ -1,4 +1,5 @@
 const User = require("../Models/User.model");
+const Organization = require("../Models/Organization.model");
 const OrganizationMembership = require("../Models/OrganizationMembership.model");
 const asyncHandler = require("express-async-handler");
 const { generateToken } = require("../utils/generateToken")
@@ -134,9 +135,10 @@ signupInOrganization = asyncHandler( async( req, res) => {
         });
 
         const organization = await Organization.findById(organizationId);
-            workspace.members.push(membership._id);
-            await workspace.save();
-
+            organization.members.push(membership._id);
+            await organization.save();
+            
+            res.status(201).json({ message: 'User registered and added to workspace', user, membership });
     } catch (err) {
 
     }
