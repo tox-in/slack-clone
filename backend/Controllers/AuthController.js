@@ -137,11 +137,11 @@ signupInOrganization = asyncHandler( async( req, res) => {
         const organization = await Organization.findById(organizationId);
             organization.members.push(membership._id);
             await organization.save();
-            
+
             res.status(201).json({ message: 'User registered and added to workspace', user, membership });
     } catch (err) {
 
     }
 })
 
-module.exports = {login,signup}
+module.exports = { login, signup, signupInOrganization}
