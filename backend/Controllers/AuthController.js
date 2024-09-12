@@ -191,10 +191,13 @@ const joinOrganization = asyncHandler(async (req, res) => {
         res.status(201).json({ message: 'User registered and added to workspace', userOrganization, membership });
 
     } catch(err) {
-
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
     }
 
-})
+});
+
+
 
 
 module.exports = { login, signup, signupInOrganization, joinOrganization}
