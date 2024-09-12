@@ -17,10 +17,13 @@ const userSchema = new Schema(
       max: 12,
       min: 10,
     },
-    globalProfile: {
-      username: { type: String, required: true, lowercase: true, required: [true, "can't be blank"], unique: true, match: [/^[a-zA-Z0-9]+$/, 'is invalid'], index: true},
-      profilePicture: { type: String },
-    },
+    globalUsername: {
+        type: String,
+        required: [true, "Username is required"],
+        match: [/^[a-zA-Z0-9 ]+$/, 'is invalid'],
+        index: true,
+      },
+    globalProfilePicture: { type: String },
     password: {
       type: String,
       required: true,

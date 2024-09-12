@@ -89,8 +89,12 @@ const signup = asyncHandler(async (req, res) => {
     });
 });
 
-signupInOrganization = asyncHandler( async( req, res) => {
+const signupInOrganization = asyncHandler( async( req, res) => {
     const {username, displayName, password, emailOrPhone, organizationId } = req.body;
+
+    if (!username || !password || !emailOrPhone || !organizationId) {
+        return res.status(400).json({ error: 'All fields are required' });
+      }
     
     try {
         let user;
@@ -111,26 +115,33 @@ signupInOrganization = asyncHandler( async( req, res) => {
             }
         }
 
+        const existingUsername = await User.findOne({ 'globalProfile.username': username });
+        if (existingUsername) {
+        return res.status(400).json({ error: 'Username is already taken.' });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
+        
         
         
         const newUser = new User({
             email: isEmail ? emailOrPhone : undefined,
             phone: isEmail ? undefined : emailOrPhone,
-            globalProfile: { username },
+            globalUsername: username,
             password: hashedPassword,
-        });    
+        });
+        
     
         await newUser.save();
         
-        const existingMembership = await OrganizationMembership.findOne({ userId: user._id, organizationId });
+        const existingMembership = await OrganizationMembership.findOne({ userId: newUser._id, organizationId });
             if (existingMembership) {
                 return res.status(400).json({ error: 'User already a member of this workspace' });
             }
 
         const membership = new OrganizationMembership({
-            userId: user._id,
-            workspaceId,
+            userId: newUser._id,
+            organizationId,
             displayName: displayName || username
         });
 
@@ -140,8 +151,10 @@ signupInOrganization = asyncHandler( async( req, res) => {
 
             res.status(201).json({ message: 'User registered and added to workspace', user, membership });
     } catch (err) {
-
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
     }
-})
+});
+
 
 module.exports = { login, signup, signupInOrganization}
