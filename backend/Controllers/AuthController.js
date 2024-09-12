@@ -41,10 +41,10 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const signup = asyncHandler(async (req, res) => {
-    const { emailOrPhone, username, password } = req.body;
+    const { emailOrPhone, name, password } = req.body;
     
 
-    if (!username || !password) {
+    if (!name || !password) {
         res.status(400);
         throw new Error("Izina cyangwa password ntabwo byuzuye.");
     }
@@ -71,7 +71,7 @@ const signup = asyncHandler(async (req, res) => {
     const newUser = new User({
         email: isEmail ? emailOrPhone : undefined,
         phone: isEmail ? undefined : emailOrPhone,
-        globalProfile: { username },
+        globalUsername: name,
         password: hashedPassword,
     });
 
@@ -82,7 +82,7 @@ const signup = asyncHandler(async (req, res) => {
         message: "Umukoresha mushya yashyizweho.",
         user: {
             id: newUser._id,
-            username: newUser.globalProfile[username],
+            globalUsername: newUser.globalUsername,
             email: newUser.email,
             phone: newUser.phone,
         },
@@ -145,16 +145,56 @@ const signupInOrganization = asyncHandler( async( req, res) => {
             displayName: displayName || username
         });
 
+        membership.save();
+
         const organization = await Organization.findById(organizationId);
             organization.members.push(membership._id);
             await organization.save();
+        
+        const userOrganization = await User.findById(newUser._id);
+            userOrganization.organizations.push(membership._id);
+            await userOrganization.save(); 
 
-            res.status(201).json({ message: 'User registered and added to workspace', user, membership });
+            res.status(201).json({ message: 'User registered and added to workspace', userOrganization, membership });
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Internal server error" });
     }
 });
 
+const joinOrganization = asyncHandler(async (req, res) => {
+    const { userId, displayName, organizationId} = req.body;
 
-module.exports = { login, signup, signupInOrganization}
+    try {
+        const existingMembership = await OrganizationMembership.findOne({ userId: userId, organizationId });
+            if (existingMembership) {
+                return res.status(400).json({ error: 'User already a member of this workspace' });
+            }
+
+        const membership = new OrganizationMembership({
+            userId: userId,
+            organizationId,
+            displayName: displayName
+        });
+
+        membership.save();
+
+        const organization = await Organization.findById(organizationId);
+            organization.members.push(membership._id);
+            await organization.save();
+
+        const userOrganization = await User.findById(newUser._id);
+            userOrganization.organizations.push(membership._id);
+            await userOrganization.save(); 
+
+        res.status(201).json({ message: 'User registered and added to workspace', userOrganization, membership });
+
+    } catch(err) {
+
+    }
+
+})
+
+
+module.exports = { login, signup, signupInOrganization, joinOrganization}
