@@ -42,7 +42,6 @@ const login = asyncHandler(async (req, res) => {
 
 const signup = asyncHandler(async (req, res) => {
     const { emailOrPhone, username, password } = req.body;
-    console.log(req.body);
     
 
     if (!username || !password) {
@@ -92,15 +91,12 @@ const signup = asyncHandler(async (req, res) => {
 
 signupInOrganization = asyncHandler( async( req, res) => {
     const {username, displayName, password, emailOrPhone, organizationId } = req.body;
-    console.log(req.body);
     
     try {
         let user;
         let isEmail = /\S+@\S+\.\S+/.test(emailOrPhone);
-        console.log(isEmail);
         
         if (isEmail) {
-            console.log("ni imeli");
             
             user = await User.findOne({ email: emailOrPhone });
             if (user) {
@@ -116,19 +112,16 @@ signupInOrganization = asyncHandler( async( req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        console.log("creating user");
+        
         
         const newUser = new User({
             email: isEmail ? emailOrPhone : undefined,
             phone: isEmail ? undefined : emailOrPhone,
             globalProfile: { username },
             password: hashedPassword,
-        });
+        });    
     
         await newUser.save();
-
-        console.log("existingMembership");
         
         const existingMembership = await OrganizationMembership.findOne({ userId: user._id, organizationId });
             if (existingMembership) {
